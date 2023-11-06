@@ -9,5 +9,5 @@ package codigo;
  * @author jjose
  */
 public enum Tokens {
-    
+   String
 }
