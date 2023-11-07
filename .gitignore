@@ -1,3 +1,12 @@
 
 nbproject/project.properties
+<<<<<<< HEAD
 /dist/
+=======
+*.properties
+*.properties
+*.properties
+*.properties
+*.xml
+nbproject/private/private.xml
+>>>>>>> ffd7f2b1c17efb9fa1d6a752f4f52046cc3dd1a4
