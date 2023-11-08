@@ -59,6 +59,10 @@ public enum Tokens {
    JNC,//Salto si no hay acarreo.
    CALLF,//Llama a un segmento de código.
    RETF,//Retorna de un segmento de código.
+   NumeroBinario,  // Nuevo token para números binarios
+   NumeroHexadecimal,  // Nuevo token para números hexadecimales
+   NumeroOctal,  // Nuevo token para números octales
+   NumeroDecimalCustom,  // Nuevo token para números decimales personalizados
    Identificador,
    Numero,
    ERROR

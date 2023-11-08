@@ -5,6 +5,10 @@ import static codigo.Tokens.*;
 %type Tokens
 L = [a-zA-Z_]+
 D = [0-9]+
+BINARIO = (b|B)('[01]+')
+HEXADECIMAL = ([hH]'[0-9a-fA-F]+'|0[0-9a-fA-F]*[xX][0-9a-fA-F]*|[0-9a-fA-F]+[hH]|[0-9a-fA-F]+[xX])
+OCTAL = ([oO]?'[0-7]+')
+DECIMAL_CUSTOM = ([Dd]?'[0-9]+'|\.[0-9]+)
 espacio = [ ,\m,\r,\b,\t,\f,\v]+
 %{
    public String lexeme;
@@ -62,6 +66,10 @@ espacio = [ ,\m,\r,\b,\t,\f,\v]+
 "RETF" { lexeme=yytext(); return RETF; }
 {espacio} {/*Ignorar*/}
 "/".* {/*Ignorar*/}
+{BINARIO} { lexeme=yytext(); return NumeroBinario; }
+{HEXADECIMAL} { lexeme=yytext(); return NumeroHexadecimal; }
+{OCTAL} { lexeme=yytext(); return NumeroOctal; }
+{DECIMAL_CUSTOM} { lexeme=yytext(); return NumeroDecimalCustom; }
 {L}({L}|{D}|_|\.)* { lexeme=yytext(); return Identificador;}
 ("(-"{D}+")")|{D}+ {lexeme=yytext(); return Numero;}
 . {return ERROR;}
