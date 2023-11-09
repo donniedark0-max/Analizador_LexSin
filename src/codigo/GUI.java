@@ -4,6 +4,16 @@
  */
 package codigo;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author jjose
@@ -30,11 +40,11 @@ public class GUI extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtResultadoLexico = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
+        txtEntrada = new javax.swing.JTextArea();
+        btnAnalizar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
@@ -51,36 +61,36 @@ public class GUI extends javax.swing.JFrame {
 
         jLayeredPane1.setBackground(new java.awt.Color(255, 102, 102));
 
-        jTextArea1.setBackground(new java.awt.Color(43, 43, 43));
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        jTextArea1.setForeground(new java.awt.Color(204, 204, 204));
-        jTextArea1.setRows(5);
-        jTextArea1.setAlignmentX(0.0F);
-        jTextArea1.setAlignmentY(0.0F);
-        jTextArea1.setBorder(null);
-        jTextArea1.setSelectedTextColor(new java.awt.Color(0, 0, 0));
-        jTextArea1.setSelectionColor(new java.awt.Color(0, 153, 153));
-        jScrollPane1.setViewportView(jTextArea1);
+        txtResultadoLexico.setBackground(new java.awt.Color(43, 43, 43));
+        txtResultadoLexico.setColumns(20);
+        txtResultadoLexico.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        txtResultadoLexico.setForeground(new java.awt.Color(204, 204, 204));
+        txtResultadoLexico.setRows(5);
+        txtResultadoLexico.setAlignmentX(0.0F);
+        txtResultadoLexico.setAlignmentY(0.0F);
+        txtResultadoLexico.setBorder(null);
+        txtResultadoLexico.setSelectedTextColor(new java.awt.Color(0, 0, 0));
+        txtResultadoLexico.setSelectionColor(new java.awt.Color(0, 153, 153));
+        jScrollPane1.setViewportView(txtResultadoLexico);
 
         jButton1.setText("jButton1");
 
-        jTextArea2.setBackground(new java.awt.Color(43, 43, 43));
-        jTextArea2.setColumns(20);
-        jTextArea2.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        jTextArea2.setForeground(new java.awt.Color(204, 204, 204));
-        jTextArea2.setRows(5);
-        jTextArea2.setAlignmentX(0.0F);
-        jTextArea2.setAlignmentY(0.0F);
-        jTextArea2.setBorder(null);
-        jTextArea2.setSelectedTextColor(new java.awt.Color(0, 0, 0));
-        jTextArea2.setSelectionColor(new java.awt.Color(0, 153, 153));
-        jScrollPane2.setViewportView(jTextArea2);
+        txtEntrada.setBackground(new java.awt.Color(43, 43, 43));
+        txtEntrada.setColumns(20);
+        txtEntrada.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        txtEntrada.setForeground(new java.awt.Color(204, 204, 204));
+        txtEntrada.setRows(5);
+        txtEntrada.setAlignmentX(0.0F);
+        txtEntrada.setAlignmentY(0.0F);
+        txtEntrada.setBorder(null);
+        txtEntrada.setSelectedTextColor(new java.awt.Color(0, 0, 0));
+        txtEntrada.setSelectionColor(new java.awt.Color(0, 153, 153));
+        jScrollPane2.setViewportView(txtEntrada);
 
-        jButton2.setText("Analizar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnAnalizar.setText("Analizar");
+        btnAnalizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnAnalizarActionPerformed(evt);
             }
         });
 
@@ -91,7 +101,7 @@ public class GUI extends javax.swing.JFrame {
         jLayeredPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(btnAnalizar, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
@@ -106,7 +116,7 @@ public class GUI extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
                 .addGap(183, 183, 183)
-                .addComponent(jButton2)
+                .addComponent(btnAnalizar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(157, 157, 157))
@@ -125,7 +135,7 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
+                    .addComponent(btnAnalizar)
                     .addComponent(jButton1))
                 .addContainerGap())
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,9 +221,52 @@ public class GUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        File archivo = new File("archivo.txt");
+        PrintWriter escribir;
+        try {
+            escribir = new PrintWriter(archivo);
+            escribir.print(txtEntrada.getText());
+            escribir.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            Reader lector = new BufferedReader(new FileReader("archivo.txt"));
+            Lexer lexer = new Lexer(lector);
+            String resultado = "";
+            while (true) {                
+                Tokens tokens = lexer.yylex();
+                if (tokens == null) {
+                    resultado += "FIN";
+                    txtResultadoLexico.setText(resultado);
+                    return;
+                }
+                switch (tokens) {
+                    case ERROR:
+                        resultado += "Simbolo no definido\n";
+                        break;
+                    case NumeroBinario:
+                    case NumeroHexadecimal:
+                    case NumeroOctal:
+                    case NumeroDecimal:
+                    case Identificador:
+                    case Numero:
+                        resultado += lexer.lexeme+" Es un "+tokens+"\n";
+                        break;
+                    default:
+                        resultado += "Tokens:"+ tokens+"\n";
+                        break;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAnalizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -251,8 +304,8 @@ public class GUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAnalizar;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -262,8 +315,8 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea4;
+    private javax.swing.JTextArea txtEntrada;
+    private javax.swing.JTextArea txtResultadoLexico;
     // End of variables declaration//GEN-END:variables
 }

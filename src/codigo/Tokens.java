@@ -9,6 +9,7 @@ package codigo;
  * @author jjose
  */
 public enum Tokens {
+   etiquetas,
    MOV,//mueve datos de un lugar a otro//
    ADD,//Realiza una suma.//
    SUB,// Realiza una resta.
@@ -59,11 +60,18 @@ public enum Tokens {
    JNC,//Salto si no hay acarreo.
    CALLF,//Llama a un segmento de código.
    RETF,//Retorna de un segmento de código.
+   Parentesis_a,
+   Parentesis_c,
+   Llave_a,
+   Llave_c,
+   Coma,
+   Global,
+   Section,
+   Identificador,
    NumeroBinario,  // Nuevo token para números binarios
    NumeroHexadecimal,  // Nuevo token para números hexadecimales
    NumeroOctal,  // Nuevo token para números octales
-   NumeroDecimalCustom,  // Nuevo token para números decimales personalizados
-   Identificador,
+   NumeroDecimal,  // Nuevo token para números decimales personalizados
    Numero,
    ERROR
 }

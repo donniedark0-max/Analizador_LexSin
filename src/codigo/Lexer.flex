@@ -5,8 +5,8 @@ import static codigo.Tokens.*;
 %type Tokens
 L = [a-zA-Z_]+
 D = [0-9]+
-BINARIO = (b|B)('[01]+')
-HEXADECIMAL = ([hH]'[0-9a-fA-F]+'|0[0-9a-fA-F]*[xX][0-9a-fA-F]*|[0-9a-fA-F]+[hH]|[0-9a-fA-F]+[xX])
+HEXADECIMAL = ([hH]'[0-9a-fA-F]+'|0x[0-9a-fA-F]+|[0-9a-fA-F]+[hHxX])
+BINARIO = (b|B)('[0-1]+')
 OCTAL = ([oO]?'[0-7]+')
 DECIMAL_CUSTOM = ([Dd]?'[0-9]+'|\.[0-9]+)
 espacio = [ ,\m,\r,\b,\t,\f,\v]+
@@ -14,6 +14,11 @@ espacio = [ ,\m,\r,\b,\t,\f,\v]+
    public String lexeme;
 %}
 %%
+FOR_LOOP |
+MY_DATA |
+JUMP_HERE |
+CALC_SUM |
+LOOP_START {lexeme=yytext(); return etiquetas;}
 "MOV" { lexeme=yytext(); return MOV; } 
 "ADD" { lexeme=yytext(); return ADD; } 
 "SUB" { lexeme=yytext(); return SUB; }
@@ -64,12 +69,20 @@ espacio = [ ,\m,\r,\b,\t,\f,\v]+
 "JNC" { lexeme=yytext(); return JNC; }
 "CALLF" { lexeme=yytext(); return CALLF; }
 "RETF" { lexeme=yytext(); return RETF; }
+"(" {lexeme=yytext();return Parentesis_a;}
+")" {lexeme=yytext();return Parentesis_c;}
+"[" {lexeme=yytext();return Llave_a;}
+"]" {lexeme=yytext();return Llave_c;}
+"," {lexeme=yytext();return Coma;}
+"global" {lexeme=yytext();return Global;}
+"section" {lexeme=yytext();return Section;}
 {espacio} {/*Ignorar*/}
-"/".* {/*Ignorar*/}
+";".*\n? { /*Ignorar los comentarios, incluyendo saltos de línea */ }
+\n { /* Saltos de línea */ }
+{L}({L}|{D}|_|\.)* { lexeme=yytext(); return Identificador;}
 {BINARIO} { lexeme=yytext(); return NumeroBinario; }
 {HEXADECIMAL} { lexeme=yytext(); return NumeroHexadecimal; }
 {OCTAL} { lexeme=yytext(); return NumeroOctal; }
-{DECIMAL_CUSTOM} { lexeme=yytext(); return NumeroDecimalCustom; }
-{L}({L}|{D}|_|\.)* { lexeme=yytext(); return Identificador;}
+{DECIMAL_CUSTOM} { lexeme=yytext(); return NumeroDecimal; }
 ("(-"{D}+")")|{D}+ {lexeme=yytext(); return Numero;}
 . {return ERROR;}
