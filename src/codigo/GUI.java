@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -73,7 +74,12 @@ public class GUI extends javax.swing.JFrame {
         txtResultadoLexico.setSelectionColor(new java.awt.Color(0, 153, 153));
         jScrollPane1.setViewportView(txtResultadoLexico);
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Subir archivo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         txtEntrada.setBackground(new java.awt.Color(43, 43, 43));
         txtEntrada.setColumns(20);
@@ -267,6 +273,32 @@ public class GUI extends javax.swing.JFrame {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAnalizarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+     
+ 
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.showOpenDialog(null);
+
+    // Obtiene el archivo seleccionado
+    File archivo = fileChooser.getSelectedFile();
+
+    if (archivo != null) {
+        // Lee el contenido del archivo y lo coloca en el área de texto
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            StringBuilder contenido = new StringBuilder();
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                contenido.append(linea).append("\n");
+            }
+            txtEntrada.setText(contenido.toString());
+        } catch (IOException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

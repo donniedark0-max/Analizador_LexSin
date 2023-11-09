@@ -1,3 +1,4 @@
-MOV AX, 42    ; Mueve el valor 42 al registro AX
-ADD BX, AX    ; Suma el contenido de los registros BX y AX y almacena el resultado en BX
-JMP LOOP_START ; Salto incondicional a la etiqueta LOOP_START
+MOV AX,1
+ADD BX,AX
+CMP CX,10
+JEQ END_LOOP

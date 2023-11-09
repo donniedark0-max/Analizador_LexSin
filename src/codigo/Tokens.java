@@ -10,6 +10,7 @@ package codigo;
  */
 public enum Tokens {
    etiquetas,
+   //desde aca son instucciones
    MOV,//mueve datos de un lugar a otro//
    ADD,//Realiza una suma.//
    SUB,// Realiza una resta.
@@ -57,9 +58,11 @@ public enum Tokens {
    JG,//Salto si es mayor (signed) o no es menor o igual (unsigned).
    JL,//Salto si es menor (signed) o no es mayor o igual (unsigned).
    JC,//Salto si hay acarreo.
+   JEQ,
    JNC,//Salto si no hay acarreo.
    CALLF,//Llama a un segmento de código.
    RETF,//Retorna de un segmento de código.
+   //hasta aca son instrucciones
    Parentesis_a,
    Parentesis_c,
    Llave_a,

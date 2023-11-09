@@ -66,6 +66,7 @@ LOOP_START {lexeme=yytext(); return etiquetas;}
 "JG"|"JNLE" { lexeme=yytext(); return JG; }
 "JL"|"JNGE" { lexeme=yytext(); return JL; }
 "JC" { lexeme=yytext(); return JC; }
+"JEQ" { lexeme=yytext(); return JEQ; }
 "JNC" { lexeme=yytext(); return JNC; }
 "CALLF" { lexeme=yytext(); return CALLF; }
 "RETF" { lexeme=yytext(); return RETF; }
