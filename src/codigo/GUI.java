@@ -21,9 +21,7 @@ import javax.swing.JFileChooser;
  */
 public class GUI extends javax.swing.JFrame {
 
-    /**
-     * Creates new form GUI
-     */
+
     public GUI() {
         initComponents();
         this.setLocationRelativeTo(null);
