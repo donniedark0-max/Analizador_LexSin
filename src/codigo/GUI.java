@@ -4,6 +4,16 @@
  */
 package codigo;
 
+import compilerTools.Directory;
+import compilerTools.ErrorLSSL;
+import compilerTools.Functions;
+import compilerTools.Production;
+import compilerTools.TextColor;
+import compilerTools.Token;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,9 +21,23 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java_cup.runtime.Symbol;
 import javax.swing.JFileChooser;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.Utilities;
 
 /**
  *
@@ -21,11 +45,61 @@ import javax.swing.JFileChooser;
  */
 public class GUI extends javax.swing.JFrame {
 
-
+    private String title;
+    private Directory Directorio;
+    private Timer timerKeyReleased;
+    private ArrayList<ErrorLSSL> errors;
+    private ArrayList<TextColor> textsColor;
+    private ArrayList<Token> tokens;
+    private ArrayList<Production> identProd;
+    private HashMap<String, String> identificadores;
+    private boolean codeHasbeenCompiled = false;
     public GUI() {
         initComponents();
         this.setLocationRelativeTo(null);
+        init();
     }
+    
+    private void init(){
+        title = "Analizador Lexico y Sintactio Assembly";
+        setTitle(title);
+        Directorio = new Directory(this, txtEntrada, title, ".asm");
+        addWindowListener(new WindowAdapter() {// Cuando presiona la "X" de la esquina superior derecha
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Directorio.Exit();
+                System.exit(0);
+            }
+        });       
+        Functions.setLineNumberOnJTextComponent(txtEntrada, WIDTH, Color.RED);
+        
+          addHighlighting(txtEntrada);
+         timerKeyReleased = new Timer((int) (1 * 0.3), (ActionEvent e) -> {
+            timerKeyReleased.stop();
+        });
+        Functions.insertAsteriskInName(this, txtEntrada, () -> {
+            timerKeyReleased.restart();
+        });
+        tokens = new ArrayList<>();
+        errors = new ArrayList<>();
+        textsColor = new ArrayList<>();
+        identProd = new ArrayList<>();
+        identificadores = new HashMap<>();
+        Functions.setAutocompleterJTextComponent(new String[]{"MOV","ADD","SUB","MUL","DIV","INC","DEC",
+            "AND","OR", "XOR", "NOT", "CMP", "JMP", "JE", "JNE", "JZ", "JNZ", "CALL", "RET", "PUSH", "POP", "LEA",
+            "MOVSB","MOVSW", "TEST", "SHL", "SHR", "SAR", "ROL", "ROR", "BSF", "BSR", "PUSHF", "POPF", "XCHG", "XLAT",
+            "NOP",  "HLT",  "STI",  "CLI",  "CMPSB",  "LODSB",  "STOSB",  "LOOP",  "JG",  "JL",  "JC",  "JEQ",  "JNC",
+            "CALLF",  "RETF","AX","BX", "CX","DX","SP", "BP", "SI", "DI", "IP", "CS", "DS", "SS", "ES", "0xFF",  "0xFFFF",
+            "0xFFFFFFFF","LOOP_START","CALC_SUM","MY_DATA","FOR_LOOP", 
+            "Section","Global","Label","Data", "Code", "End"}, txtEntrada, () -> {
+        timerKeyReleased.restart();
+        });
+    
+    }
+      
+
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -41,14 +115,14 @@ public class GUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtResultadoLexico = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        txtEntrada = new javax.swing.JTextArea();
         btnAnalizar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtEntrada = new javax.swing.JTextPane();
+        btnAnalizarSintac = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
+        txtSint = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -79,18 +153,6 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        txtEntrada.setBackground(new java.awt.Color(43, 43, 43));
-        txtEntrada.setColumns(20);
-        txtEntrada.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        txtEntrada.setForeground(new java.awt.Color(204, 204, 204));
-        txtEntrada.setRows(5);
-        txtEntrada.setAlignmentX(0.0F);
-        txtEntrada.setAlignmentY(0.0F);
-        txtEntrada.setBorder(null);
-        txtEntrada.setSelectedTextColor(new java.awt.Color(0, 0, 0));
-        txtEntrada.setSelectionColor(new java.awt.Color(0, 153, 153));
-        jScrollPane2.setViewportView(txtEntrada);
-
         btnAnalizar.setText("Analizar");
         btnAnalizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -102,26 +164,31 @@ public class GUI extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("ANALIZADOR LEXICO");
 
+        txtEntrada.setBackground(new java.awt.Color(43, 43, 43));
+        txtEntrada.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        txtEntrada.setForeground(new java.awt.Color(204, 204, 204));
+        jScrollPane3.setViewportView(txtEntrada);
+
         jLayeredPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(btnAnalizar, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jScrollPane3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(72, 72, 72)
+                .addComponent(jScrollPane3)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
                 .addGap(183, 183, 183)
                 .addComponent(btnAnalizar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 467, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(157, 157, 157))
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,8 +202,8 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
                 .addGap(55, 55, 55)
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAnalizar)
@@ -149,19 +216,24 @@ public class GUI extends javax.swing.JFrame {
                     .addContainerGap(409, Short.MAX_VALUE)))
         );
 
-        jButton3.setText("jButton1");
+        btnAnalizarSintac.setText("Analizar Sintaxis");
+        btnAnalizarSintac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnalizarSintacActionPerformed(evt);
+            }
+        });
 
-        jTextArea4.setBackground(new java.awt.Color(43, 43, 43));
-        jTextArea4.setColumns(20);
-        jTextArea4.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        jTextArea4.setForeground(new java.awt.Color(255, 255, 255));
-        jTextArea4.setRows(5);
-        jTextArea4.setAlignmentX(0.0F);
-        jTextArea4.setAlignmentY(0.0F);
-        jTextArea4.setBorder(null);
-        jTextArea4.setSelectedTextColor(new java.awt.Color(0, 0, 0));
-        jTextArea4.setSelectionColor(new java.awt.Color(0, 153, 153));
-        jScrollPane4.setViewportView(jTextArea4);
+        txtSint.setBackground(new java.awt.Color(43, 43, 43));
+        txtSint.setColumns(20);
+        txtSint.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        txtSint.setForeground(new java.awt.Color(255, 255, 255));
+        txtSint.setRows(5);
+        txtSint.setAlignmentX(0.0F);
+        txtSint.setAlignmentY(0.0F);
+        txtSint.setBorder(null);
+        txtSint.setSelectedTextColor(new java.awt.Color(0, 0, 0));
+        txtSint.setSelectionColor(new java.awt.Color(0, 153, 153));
+        jScrollPane4.setViewportView(txtSint);
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -178,13 +250,13 @@ public class GUI extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLayeredPane1)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 8, Short.MAX_VALUE)
+                                .addGap(0, 70, Short.MAX_VALUE)
                                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 908, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jSeparator1))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton3)
+                        .addComponent(btnAnalizarSintac)
                         .addGap(418, 418, 418))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -203,7 +275,7 @@ public class GUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(btnAnalizarSintac)
                 .addGap(27, 27, 27))
         );
 
@@ -227,6 +299,8 @@ public class GUI extends javax.swing.JFrame {
 
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         // TODO add your handling code here:
+        
+        int cont = 1;
         File archivo = new File("archivo.txt");
         PrintWriter escribir;
         try {
@@ -240,7 +314,7 @@ public class GUI extends javax.swing.JFrame {
         try {
             Reader lector = new BufferedReader(new FileReader("archivo.txt"));
             Lexer lexer = new Lexer(lector);
-            String resultado = "";
+            String resultado = "LINEA " + cont + "\n";
             while (true) {                
                 Tokens tokens = lexer.yylex();
                 if (tokens == null) {
@@ -249,6 +323,10 @@ public class GUI extends javax.swing.JFrame {
                     return;
                 }
                 switch (tokens) {
+                    case Linea:
+                        cont++;
+                        resultado += "LINEA " + cont + "\n";
+                        break;
                     case ERROR:
                         resultado += "Simbolo no definido\n";
                         break;
@@ -298,6 +376,23 @@ public class GUI extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void btnAnalizarSintacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarSintacActionPerformed
+        String ST = txtEntrada.getText();
+        Sintax s = new Sintax(new codigo.LexerCup(new StringReader(ST)));
+        
+        try {
+            s.parse();
+            txtSint.setText("Analisis correcto");
+            txtSint.setForeground(Color.GREEN);
+        } catch (Exception e) {
+            Symbol sym = s.getS();
+            txtSint.setText("ERROR: Error de sintaxis. Linea: " +(sym.right + 1) + " Columna: " + (sym.left + 1) + ", Texto: \'" + sym.value + "\'");
+            txtSint.setForeground(Color.red);
+
+        }
+    }//GEN-LAST:event_btnAnalizarSintacActionPerformed
+
+    
     /**
      * @param args the command line arguments
      */
@@ -335,18 +430,68 @@ public class GUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnalizar;
+    private javax.swing.JButton btnAnalizarSintac;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea4;
-    private javax.swing.JTextArea txtEntrada;
+    private javax.swing.JTextPane txtEntrada;
     private javax.swing.JTextArea txtResultadoLexico;
+    private javax.swing.JTextArea txtSint;
     // End of variables declaration//GEN-END:variables
+
+    private void addHighlighting(JTextPane txtEntrada) {
+          StyledDocument doc = txtEntrada.getStyledDocument();
+    Style defaultStyle = doc.addStyle("DefaultStyle", null);
+    StyleConstants.setForeground(defaultStyle, Color.WHITE);
+
+    Style commentStyle = doc.addStyle("CommentStyle", defaultStyle);
+    StyleConstants.setForeground(commentStyle, Color.GRAY);
+
+    txtEntrada.getDocument().addDocumentListener(new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateStyles(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateStyles(e);
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateStyles(e);
+        }
+
+        private void updateStyles(DocumentEvent e) {
+            SwingUtilities.invokeLater(() -> {
+        try {
+            int start = Utilities.getRowStart(txtEntrada, Math.max(0, e.getOffset() - 1));
+            int end = Utilities.getRowEnd(txtEntrada, e.getOffset() + e.getLength());
+
+            String text = txtEntrada.getText(start, end - start);
+
+            // Busca el primer ";" en la línea actual después de algún espacio en blanco
+            int commentIndex = text.indexOf(";");
+
+            if (commentIndex != -1 && (commentIndex == 0 || Character.isWhitespace(text.charAt(commentIndex - 1)))) {
+                // Si hay un ";" en la línea y está al inicio o después de algún espacio en blanco, aplica el estilo de comentario solo hasta el final de la línea
+                doc.setCharacterAttributes(start + commentIndex, end - (start + commentIndex), commentStyle, false);
+            } else {
+                // Si no hay un ";" en la línea o no está al inicio o después de algún espacio en blanco, aplica el estilo predeterminado
+                doc.setCharacterAttributes(start, end - start, defaultStyle, false);
+            }
+        } catch (BadLocationException ex) {
+            ex.printStackTrace();
+        }
+    });
+        }
+    });
+    }
 }

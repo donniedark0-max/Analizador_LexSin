@@ -13,7 +13,7 @@ HEXADECIMAL = ([hH]'[0-9a-fA-F]+'|0x[0-9a-fA-F]+|[0-9a-fA-F]+[hHxX])
 BINARIO = (b|B)('[0-1]+')
 OCTAL = ([oO]?'[0-7]+')
 DECIMAL_CUSTOM = ([Dd]?'[0-9]+'|\.[0-9]+)
-espacio = [ ,\m,\r,\b,\t,\f,\v]+
+espacio = [ \t\r\n]+
 %{
     private Symbol symbol(int type, Object value){
         return new Symbol(type, yyline, yycolumn, value);

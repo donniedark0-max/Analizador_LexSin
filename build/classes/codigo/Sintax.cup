@@ -15,19 +15,21 @@ parser code
     }
 :};
 
-terminal Etiquetas, MOV, ADD, SUB, MUL, DIV, INC, DEC, AND, OR, XOR, NOT, CMP, JMP, JE, JNE,
+terminal Linea, Etiquetas, MOV, ADD, SUB, MUL, DIV, INC, DEC, AND, OR, XOR, NOT, CMP, JMP, JE, JNE,
     JZ, JNZ, CALL, RET, PUSH, POP, LEA, MOVSB, MOVSW, TEST, SHL, SHR, SAR, ROL, ROR, BSF, BSR,
     PUSHF, POPF, XCHG, XLAT, NOP, HLT, STI, CLI, CMPSB, LODSB, STOSB, LOOP, JG, JL, JC, JEQ,
     JNC, CALLF, RETF, Parentesis_a, Parentesis_c, Llave_a, Llave_c, Coma, Global, Section, 
     Identificador, NumeroBinario, NumeroHexadecimal, NumeroOctal, NumeroDecimal, Numero, ERROR;
-non terminal INICIO, INSTRUCCION, OPERANDO;
+non terminal INICIO, INSTRUCCION, OPERANDO,OPERANDO_DOS, DECLARACION;
 
 start with INICIO;
 
 INICIO ::= INSTRUCCION
-          | INICIO INSTRUCCION;
+          | DECLARACION
+          | INICIO INSTRUCCION
+          | INICIO DECLARACION;
 
-INSTRUCCION ::= MOV OPERANDO Coma OPERANDO
+INSTRUCCION ::= MOV OPERANDO Coma OPERANDO 
              | ADD OPERANDO Coma OPERANDO
              | SUB OPERANDO Coma OPERANDO
              | MUL OPERANDO Coma OPERANDO
@@ -80,3 +82,7 @@ INSTRUCCION ::= MOV OPERANDO Coma OPERANDO
              | RETF;
 
 OPERANDO ::= Identificador | NumeroBinario | NumeroHexadecimal | NumeroOctal | NumeroDecimal | Numero;
+
+DECLARACION ::= Section Etiquetas
+             | Global Etiquetas
+             | Etiquetas;

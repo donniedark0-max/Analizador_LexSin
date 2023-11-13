@@ -68,7 +68,7 @@ LOOP_START {lexeme=yytext(); return etiquetas;}
 "JC" { lexeme=yytext(); return JC; }
 "JEQ" { lexeme=yytext(); return JEQ; }
 "JNC" { lexeme=yytext(); return JNC; }
-"CALLF" { lexeme=yytext(); return CALLF; }
+"CALLF" { lexeme=yytext(); return CALLF; }  
 "RETF" { lexeme=yytext(); return RETF; }
 "(" {lexeme=yytext();return Parentesis_a;}
 ")" {lexeme=yytext();return Parentesis_c;}
@@ -79,7 +79,7 @@ LOOP_START {lexeme=yytext(); return etiquetas;}
 "section" {lexeme=yytext();return Section;}
 {espacio} {/*Ignorar*/}
 ";".*\n? { /*Ignorar los comentarios, incluyendo saltos de línea */ }
-\n { /* Saltos de línea */ }
+( "\n" ) {return Linea;}
 {L}({L}|{D}|_|\.)* { lexeme=yytext(); return Identificador;}
 {BINARIO} { lexeme=yytext(); return NumeroBinario; }
 {HEXADECIMAL} { lexeme=yytext(); return NumeroHexadecimal; }

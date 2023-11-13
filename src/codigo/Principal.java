@@ -23,7 +23,7 @@ public class Principal {
     }
     public static void generarLexerAndSintac(String ruta, String ruta2, String[] rutaSintactico) throws IOException, Exception{
         File archivo;
-        archivo = new File(ruta);
+          archivo = new File(ruta);
         JFlex.Main.generate(archivo);
         archivo = new File(ruta2);
         JFlex.Main.generate(archivo);
