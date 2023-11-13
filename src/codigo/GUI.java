@@ -471,26 +471,26 @@ public class GUI extends javax.swing.JFrame {
 
         private void updateStyles(DocumentEvent e) {
             SwingUtilities.invokeLater(() -> {
-        try {
-            int start = Utilities.getRowStart(txtEntrada, Math.max(0, e.getOffset() - 1));
-            int end = Utilities.getRowEnd(txtEntrada, e.getOffset() + e.getLength());
+                try {
+                    int start = Utilities.getRowStart(txtEntrada, Math.max(0, e.getOffset() - 1));
+                    int end = Utilities.getRowEnd(txtEntrada, e.getOffset() + e.getLength());
 
-            String text = txtEntrada.getText(start, end - start);
+                    String text = txtEntrada.getText(start, end - start);
 
-            // Busca el primer ";" en la línea actual después de algún espacio en blanco
-            int commentIndex = text.indexOf(";");
+                    // Busca el primer ";" en la línea actual después de algún espacio en blanco
+                    int commentIndex = text.indexOf(";");
 
-            if (commentIndex != -1 && (commentIndex == 0 || Character.isWhitespace(text.charAt(commentIndex - 1)))) {
-                // Si hay un ";" en la línea y está al inicio o después de algún espacio en blanco, aplica el estilo de comentario solo hasta el final de la línea
-                doc.setCharacterAttributes(start + commentIndex, end - (start + commentIndex), commentStyle, false);
-            } else {
-                // Si no hay un ";" en la línea o no está al inicio o después de algún espacio en blanco, aplica el estilo predeterminado
-                doc.setCharacterAttributes(start, end - start, defaultStyle, false);
-            }
-        } catch (BadLocationException ex) {
-            ex.printStackTrace();
-        }
-    });
+                    if (commentIndex != -1 && (commentIndex == 0 || Character.isWhitespace(text.charAt(commentIndex - 1)))) {
+                        // Si hay un ";" en la línea y está al inicio o después de algún espacio en blanco, aplica el estilo de comentario solo hasta el final de la línea
+                        doc.setCharacterAttributes(start + commentIndex, end - (start + commentIndex), commentStyle, false);
+                    } else {
+                        // Si no hay un ";" en la línea o no está al inicio o después de algún espacio en blanco, aplica el estilo predeterminado
+                        doc.setCharacterAttributes(start, end - start, defaultStyle, false);
+                    }
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                }
+            });
         }
     });
     }
