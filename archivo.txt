@@ -1,2 +1,4 @@
-MOV AX, 100
-ADD REX, o'54312611'
+MOV eax, 12
+MOV ebx, 1
+MOV ecx, 12
+MOV edx, 13

@@ -19,8 +19,8 @@ terminal Linea, Etiquetas, MOV, ADD, SUB, MUL, DIV, INC, DEC, AND, OR, XOR, NOT,
     JZ, JNZ, CALL, RET, PUSH, POP, LEA, MOVSB, MOVSW, TEST, SHL, SHR, SAR, ROL, ROR, BSF, BSR,
     PUSHF, POPF, XCHG, XLAT, NOP, HLT, STI, CLI, CMPSB, LODSB, STOSB, LOOP, JG, JL, JC, JEQ,
     JNC, CALLF, RETF, Parentesis_a, Parentesis_c, Llave_a, Llave_c, Coma, Global, Section, 
-    Identificador, NumeroBinario, NumeroHexadecimal, NumeroOctal, NumeroDecimal, Numero, ERROR;
-non terminal INICIO, INSTRUCCION, OPERANDO,OPERANDO_DOS, DECLARACION;
+    Identificador, NumeroBinario, NumeroHexadecimal, NumeroOctal, NumeroDecimal, Numero, ERROR  ;
+non terminal INICIO, INSTRUCCION, OPERANDO, OPERANDO_DOS,MENSAJE, DECLARACION, MENSAJES;
 
 start with INICIO;
 
@@ -81,8 +81,16 @@ INSTRUCCION ::= MOV OPERANDO Coma OPERANDO
              | CALLF OPERANDO
              | RETF;
 
-OPERANDO ::= Identificador | NumeroBinario | NumeroHexadecimal | NumeroOctal | NumeroDecimal | Numero;
+OPERANDO ::= Identificador | NumeroBinario | NumeroHexadecimal | NumeroOctal | NumeroDecimal | Numero | Etiquetas
+             | OPERANDO_DOS;
 
-DECLARACION ::= Section Etiquetas
-             | Global Etiquetas
-             | Etiquetas;
+OPERANDO_DOS ::= INSTRUCCION;
+
+DECLARACION ::= Section Etiquetas MENSAJES
+             | Etiquetas
+             | Section Etiquetas INSTRUCCION MENSAJES;
+
+MENSAJES ::= MENSAJE
+           | MENSAJES MENSAJE;
+
+MENSAJE ::= Identificador OPERANDO;

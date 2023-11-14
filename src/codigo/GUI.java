@@ -127,7 +127,7 @@ public class GUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("AnalizadorAssembler");
-        setUndecorated(true);
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 0));
         jPanel1.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
@@ -180,15 +180,15 @@ public class GUI extends javax.swing.JFrame {
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                .addGap(72, 72, 72)
+                .addGap(44, 44, 44)
                 .addComponent(jScrollPane3)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(34, 34, 34))
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
                 .addGap(183, 183, 183)
                 .addComponent(btnAnalizar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 467, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(157, 157, 157))
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -249,10 +249,11 @@ public class GUI extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLayeredPane1)
+                            .addComponent(jSeparator1)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 70, Short.MAX_VALUE)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 908, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jSeparator1))
+                                .addGap(0, 44, Short.MAX_VALUE)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 908, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(43, 43, 43)))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -261,7 +262,7 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(279, 279, 279))
+                .addGap(326, 326, 326))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -272,9 +273,9 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(btnAnalizarSintac)
                 .addGap(27, 27, 27))
         );
@@ -379,17 +380,37 @@ public class GUI extends javax.swing.JFrame {
     private void btnAnalizarSintacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarSintacActionPerformed
         String ST = txtEntrada.getText();
         Sintax s = new Sintax(new codigo.LexerCup(new StringReader(ST)));
+        long startTime = System.currentTimeMillis();
+
         
         try {
             s.parse();
-            txtSint.setText("Analisis correcto");
-            txtSint.setForeground(Color.GREEN);
+            txtSint.setText("Análisis Sintáctico Completo: No se encontraron errores.");
+            txtSint.setForeground(new Color(34, 139, 34)); // Verde oscuro
         } catch (Exception e) {
             Symbol sym = s.getS();
-            txtSint.setText("ERROR: Error de sintaxis. Linea: " +(sym.right + 1) + " Columna: " + (sym.left + 1) + ", Texto: \'" + sym.value + "\'");
-            txtSint.setForeground(Color.red);
+            int columna = sym.left + 1;
 
-        }
+            
+            String mensajeError = "ERROR: Se encontró un error de sintaxis.\n";
+            mensajeError += "En la línea " + (sym.right + 1);
+            if (columna > 1) {
+                mensajeError += ", columna " + columna +"\n";
+            }
+            
+            mensajeError += "Texto Erróneo: '" + sym.value + "'\n";
+
+            txtSint.setText(mensajeError);
+            txtSint.setForeground(new Color(178, 34, 34));
+
+        } finally {
+        // Obtiene el tiempo final
+        long endTime = System.currentTimeMillis();
+
+        // Calcula la diferencia de tiempo y lo muestra en la consola
+        long totalTime = endTime - startTime;
+        System.out.println("Tiempo de analisis: " + totalTime + " milisegundos");
+    }
     }//GEN-LAST:event_btnAnalizarSintacActionPerformed
 
     
