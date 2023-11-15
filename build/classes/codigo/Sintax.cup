@@ -88,7 +88,13 @@ OPERANDO_DOS ::= INSTRUCCION;
 
 DECLARACION ::= Section Etiquetas MENSAJES
              | Etiquetas
-             | Section Etiquetas INSTRUCCION MENSAJES;
+             | Section Etiquetas INSTRUCCION MENSAJES
+             | Global Etiquetas MENSAJES
+             | Global OPERANDO Etiquetas MENSAJES
+             | Section OPERANDO Etiquetas MENSAJES;
+
+
+             
 
 MENSAJES ::= MENSAJE
            | MENSAJES MENSAJE;
