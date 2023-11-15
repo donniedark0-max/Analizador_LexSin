@@ -13,7 +13,7 @@ HEXADECIMAL = ([hH]'[0-9a-fA-F]+'|0x[0-9a-fA-F]+|[0-9a-fA-F]+[hHxX])
 BINARIO = (b|B)('[0-1]+')
 OCTAL = ([oO]?'[0-7]+')
 DECIMAL_CUSTOM = ([Dd]?'[0-9]+'|\.[0-9]+)
-espacio = [ \t\r\n]+
+espacio = [ ,\m,\r,\b,\t,\f,\v,]+
 %{
     private Symbol symbol(int type, Object value){
         return new Symbol(type, yyline, yycolumn, value);
@@ -84,11 +84,11 @@ LOOP_START {return new Symbol(sym.Etiquetas, yychar, yyline, yytext());}
 ")" {return new Symbol(sym.Parentesis_c, yychar, yyline, yytext());}
 "[" {return new Symbol(sym.Llave_a, yychar, yyline, yytext());}
 "]" {return new Symbol(sym.Llave_c, yychar, yyline, yytext());}
-"," {return new Symbol(sym.Coma, yychar, yyline, yytext());}
+"," {return new Symbol(sym.Coma, yychar, yyline, yytext()); }
 "global" {return new Symbol(sym.Global, yychar, yyline, yytext());}
 "section" {return new Symbol(sym.Section, yychar, yyline, yytext());}
 {espacio} {/*Ignorar*/}
-";".*\n? { /*Ignorar los comentarios, incluyendo saltos de línea */ }
+";".*[\r\n]* { /* Ignorar los comentarios, incluyendo saltos de línea */ }
 \n { /* Saltos de línea */ }
 {L}({L}|{D}|_|\.)* { return new Symbol(sym.Identificador, yychar, yyline, yytext());}
 {BINARIO} { return new Symbol(sym.NumeroBinario, yychar, yyline, yytext()); }

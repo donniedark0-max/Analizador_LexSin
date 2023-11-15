@@ -1,4 +1,1 @@
-MOV eax, 12
-MOV ebx, 1
-MOV ecx, 12
-MOV edx, 13
+mov

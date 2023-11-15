@@ -9,7 +9,7 @@ HEXADECIMAL = ([hH]'[0-9a-fA-F]+'|0x[0-9a-fA-F]+|[0-9a-fA-F]+[hHxX])
 BINARIO = (b|B)('[0-1]+')
 OCTAL = ([oO]?'[0-7]+')
 DECIMAL_CUSTOM = ([Dd]?'[0-9]+'|\.[0-9]+)
-espacio = [ ,\m,\r,\b,\t,\f,\v]+
+espacio = [ ,\m,\r,\b,\t,\f,\v,]+
 %{
    public String lexeme;
 %}
@@ -78,7 +78,7 @@ LOOP_START {lexeme=yytext(); return etiquetas;}
 "global" {lexeme=yytext();return Global;}
 "section" {lexeme=yytext();return Section;}
 {espacio} {/*Ignorar*/}
-";".*\n? { /*Ignorar los comentarios, incluyendo saltos de línea */ }
+";".*[\r\n]* { /* Ignorar los comentarios, incluyendo saltos de línea */ }
 ( "\n" ) {return Linea;}
 {L}({L}|{D}|_|\.)* { lexeme=yytext(); return Identificador;}
 {BINARIO} { lexeme=yytext(); return NumeroBinario; }
