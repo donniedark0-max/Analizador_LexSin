@@ -9,7 +9,7 @@ package codigo;
  * @author jjose
  */
 public enum Tokens {
-    Linea,
+   Linea,
    etiquetas,
    //desde aca son instucciones
    MOV,//mueve datos de un lugar a otro//

@@ -1,1 +1,7 @@
-mov
+section .text
+    global _start
+
+_start:
+    MOV AX, 1 
+   ADD BX, AX 
+   CMP CX, 10
