@@ -379,7 +379,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void btnAnalizarSintacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarSintacActionPerformed
         String ST = txtEntrada.getText();
-        Sintax s = new Sintax(new codigo.LexerCup(new StringReader(ST)));
+        sintax s = new sintax(new codigo.LexerCup(new StringReader(ST)));
         long startTime = System.currentTimeMillis();
 
         

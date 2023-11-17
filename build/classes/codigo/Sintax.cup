@@ -90,9 +90,10 @@ OPERANDO_DOS ::= INSTRUCCION;
 DECLARACION ::= Section Etiquetas MENSAJES
              | Etiquetas
              | Section Etiquetas INSTRUCCION MENSAJES;
-          
-             
+                       
+
 MENSAJES ::= MENSAJE
            | MENSAJES MENSAJE;
 
 MENSAJE ::= Identificador OPERANDO;
+            

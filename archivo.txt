@@ -1,7 +1,5 @@
+section MY_DATA
+    hello db 'Hola, Mundo!', 0
+
 section .text
     global _start
-
-_start:
-    MOV AX, 1 
-   ADD BX, AX 
-   CMP CX, 10
