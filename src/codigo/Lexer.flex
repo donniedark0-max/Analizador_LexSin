@@ -75,8 +75,13 @@ LOOP_START {lexeme=yytext(); return etiquetas;}
 "[" {lexeme=yytext();return Llave_a;}
 "]" {lexeme=yytext();return Llave_c;}
 "," {lexeme=yytext();return Coma;}
+"''" {lexeme=yytext();return Comilla_a;}
+"''" {lexeme=yytext();return Comilla_c;}
 "global" {lexeme=yytext();return Global;}
 "section" {lexeme=yytext();return Section;}
+".text" { lexeme = yytext(); return Section_text; }
+".data" { lexeme = yytext(); return Section_data; }
+".bss" { lexeme = yytext(); return Section_bss; }
 {espacio} {/*Ignorar*/}
 ";".*[\r\n]* { /* Ignorar los comentarios, incluyendo saltos de línea */ }
 ( "\n" ) {return Linea;}

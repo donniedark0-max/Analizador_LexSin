@@ -69,8 +69,13 @@ public enum Tokens {
    Llave_a,
    Llave_c,
    Coma,
+   Comilla_a,
+   Comilla_c,
    Global,
    Section,
+   Section_text,
+   Section_data,
+   Section_bss,
    Identificador,
    NumeroBinario,  // Nuevo token para números binarios
    NumeroHexadecimal,  // Nuevo token para números hexadecimales

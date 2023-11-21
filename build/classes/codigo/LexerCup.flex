@@ -85,8 +85,13 @@ LOOP_START {return new Symbol(sym.Etiquetas, yychar, yyline, yytext());}
 "[" {return new Symbol(sym.Llave_a, yychar, yyline, yytext());}
 "]" {return new Symbol(sym.Llave_c, yychar, yyline, yytext());}
 "," {return new Symbol(sym.Coma, yychar, yyline, yytext()); }
+"'" { return new Symbol(sym.Comilla_a, yychar, yyline, yytext()); }
+"'" { return new Symbol(sym.Comilla_c, yychar, yyline, yytext()); }
 "global" {return new Symbol(sym.Global, yychar, yyline, yytext());}
 "section" {return new Symbol(sym.Section, yychar, yyline, yytext());}
+".text" { return new Symbol(sym.Section_text, yychar, yyline, yytext()); }
+".data" { return new Symbol(sym.Section_data, yychar, yyline, yytext()); }
+".bss" { return new Symbol(sym.Section_bss, yychar, yyline, yytext()); }
 {espacio} {/*Ignorar*/}
 ";".*[\r\n]* { /* Ignorar los comentarios, incluyendo saltos de línea */ }
 \n { /* Saltos de línea */ }
