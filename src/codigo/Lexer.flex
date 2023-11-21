@@ -18,6 +18,7 @@ FOR_LOOP |
 MY_DATA |
 JUMP_HERE |
 CALC_SUM |
+_start |
 LOOP_START {lexeme=yytext(); return etiquetas;}
 "MOV" { lexeme=yytext(); return MOV; } 
 "ADD" { lexeme=yytext(); return ADD; } 

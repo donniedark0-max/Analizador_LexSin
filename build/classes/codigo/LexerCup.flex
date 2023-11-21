@@ -28,6 +28,7 @@ FOR_LOOP |
 MY_DATA |
 JUMP_HERE |
 CALC_SUM |
+_start |
 LOOP_START {return new Symbol(sym.Etiquetas, yychar, yyline, yytext());}
 "MOV" { return new Symbol(sym.MOV, yychar, yyline, yytext());} 
 "ADD" { return new Symbol(sym.ADD, yychar, yyline, yytext()); } 
