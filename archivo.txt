@@ -1,5 +1,8 @@
 section MY_DATA
-    hello db 'Hola, Mundo!', 0
+mensaje ax 'hola1',0
 
-section .text
-    global _start
+
+MOV eax, MY_DATA
+MOV ebx, 1
+MOV ecx, mensaje
+MOV edx, 13

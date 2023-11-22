@@ -63,14 +63,14 @@ public enum Tokens {
    JNC,//Salto si no hay acarreo.
    CALLF,//Llama a un segmento de código.
    RETF,//Retorna de un segmento de código.
+   Int,
    //hasta aca son instrucciones
    Parentesis_a,
    Parentesis_c,
    Llave_a,
    Llave_c,
    Coma,
-   Comilla_a,
-   Comilla_c,
+   Comilla_s,
    Global,
    Section,
    Section_text,
