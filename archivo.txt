@@ -1,8 +1,25 @@
-section MY_DATA
-mensaje ax 'hola1',0
+section .data
+    num1 db 5
+    num2 db 3
+    result db 0
 
+section .text
+    global _start
 
-MOV eax, MY_DATA
-MOV ebx, 1
-MOV ecx, mensaje
-MOV edx, 13
+_start:
+    ; cargar num1 en eax
+    MOV al, [num1]
+
+    ; cargar num2 en ebx
+    MOV bl, [num2]
+
+    ; sumar num1 y num2 y guardar el resultado en eax
+    ADD al, bl
+
+    ; guardar el resultado en la variable 'result'
+    MOV [result], al
+
+    ; salir del programa
+    MOV eax, 1
+    XOR ebx, ebx
+    int 0x80

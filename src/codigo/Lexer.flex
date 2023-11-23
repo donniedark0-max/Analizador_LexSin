@@ -14,12 +14,12 @@ espacio = [ ,\m,\r,\b,\t,\f,\v,]+
    public String lexeme;
 %}
 %%
-FOR_LOOP |
-MY_DATA |
-JUMP_HERE |
-CALC_SUM |
-_start |
-LOOP_START {lexeme=yytext(); return etiquetas;}
+FOR_LOOP | FOR_LOOP: |
+MY_DATA | MY_DATA: |
+JUMP_HERE | JUMP_HERE: |
+CALC_SUM | CALC_SUM: |
+_start | _start: |
+LOOP_START | LOOP_START: {lexeme=yytext(); return etiquetas;}
 "MOV" { lexeme=yytext(); return MOV; } 
 "ADD" { lexeme=yytext(); return ADD; } 
 "SUB" { lexeme=yytext(); return SUB; }

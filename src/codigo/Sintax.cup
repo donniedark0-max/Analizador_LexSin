@@ -20,7 +20,7 @@ terminal Linea, Etiquetas, MOV, ADD, SUB, MUL, DIV, INC, DEC, AND, OR, XOR, NOT,
     PUSHF, POPF, XCHG, XLAT, NOP, HLT, STI, CLI, CMPSB, LODSB, STOSB, LOOP, JG, JL, JC, JEQ,
     JNC, CALLF, RETF, Int, Parentesis_a, Parentesis_c, Llave_a, Llave_c, Coma, Comilla_s, Global, Section, Section_text, Section_data, 
     Section_bss, Identificador, NumeroBinario, NumeroHexadecimal, NumeroOctal, NumeroDecimal, Numero, ERROR  ;
-non terminal INICIO, INSTRUCCION, OPERANDO,MENSAJE, DECLARACION, MENSAJES, SECTION, IDE, OPERANDO_TRES;
+non terminal INICIO, INSTRUCCION, OPERANDO,MENSAJE, DECLARACION, MENSAJES, SECTION, IDE, OPERANDO_TRES, IDE_DOS, IDE_UNO;
 
 start with INICIO;
 
@@ -83,9 +83,9 @@ INSTRUCCION ::= MOV OPERANDO Coma OPERANDO
              | Int OPERANDO;
 
 OPERANDO ::= Identificador|  NumeroBinario | NumeroHexadecimal | NumeroOctal | NumeroDecimal | Numero | Etiquetas
-             | OPERANDO_TRES;
+             | OPERANDO_TRES | Llave_a Identificador Llave_c;
 
-OPERANDO_TRES ::= INSTRUCCION;
+OPERANDO_TRES ::= INSTRUCCION   ;
 
 DECLARACION ::= Section Etiquetas Comilla_s MENSAJES Comilla_s Coma OPERANDO
              | Section SECTION IDE  Comilla_s MENSAJES Comilla_s Coma OPERANDO
@@ -93,6 +93,9 @@ DECLARACION ::= Section Etiquetas Comilla_s MENSAJES Comilla_s Coma OPERANDO
              | Section SECTION Etiquetas Comilla_s MENSAJES Comilla_s Coma OPERANDO
              | Section SECTION IDE Etiquetas OPERANDO Comilla_s MENSAJES Comilla_s Coma OPERANDO
              | Etiquetas
+             | Section Etiquetas Identificador Identificador OPERANDO
+             | Section SECTION Etiquetas Identificador Identificador OPERANDO
+             | Section SECTION Identificador Identificador OPERANDO IDE_UNO
              | Section Etiquetas Identificador Identificador Comilla_s MENSAJES Comilla_s Coma OPERANDO
              | Section Etiquetas Identificador Identificador Comilla_s OPERANDO Comilla_s Coma OPERANDO
              | Section SECTION IDE Etiquetas OPERANDO
@@ -103,6 +106,8 @@ SECTION ::= Section_text | Section_data | Section_bss;
 IDE ::= Identificador Etiquetas | Identificador Global
       | Global;
 
+IDE_UNO ::= IDE_DOS | IDE_UNO IDE_DOS;
+IDE_DOS ::= Identificador Identificador OPERANDO;
 
 MENSAJES ::= MENSAJE
            | MENSAJES MENSAJE;
